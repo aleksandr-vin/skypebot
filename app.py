@@ -1,14 +1,25 @@
+#!/usr/bin/env python
+
 import Skype4Py
 import sys
+import ConfigParser, os
 
-TOPIC_NAME = 'hd-testing'
+config = ConfigParser.ConfigParser()
+config.read(['skypebot.cfg', os.path.expanduser('~/.skypebot.cfg')])
 
+TOPIC_NAME=config.get('topic', 'name')
+CHAT_ID=config.get('chat', 'id')
+
+print 'Topic:   ', TOPIC_NAME
+print 'Chat ID: ', CHAT_ID
+
+print 'Attaching to Skype via Skype4Py...'
 skype = Skype4Py.Skype()
 skype.Attach()
 
 print 'Your full name:', skype.CurrentUser.FullName
 
-chat = skype.Chat('#aleksandr.vin/$446238d781b259fe')
+chat = skype.Chat(CHAT_ID)
 if TOPIC_NAME != chat.Topic:
     print 'ERROR: chat topic mismatch (expected: {}, but found: {})!'.format(TOPIC_NAME, chat.Topic)
     exit(1)
